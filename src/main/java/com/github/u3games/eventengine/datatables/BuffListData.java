@@ -27,10 +27,10 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
+import com.github.u3games.eventengine.events.holders.PlayerHolder;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.model.holders.SkillHolder;
 import com.l2jserver.util.data.xml.IXmlReader;
 
@@ -88,7 +88,7 @@ public class BuffListData implements IXmlReader
 	 * @param player
 	 * @return List<SkillHolder>
 	 */
-	public Set<SkillHolder> getBuffsPlayer(L2PcInstance player)
+	public Set<SkillHolder> getBuffsPlayer(PlayerHolder player)
 	{
 		if (_buffsPlayers.containsKey(player.getObjectId()))
 		{
@@ -103,7 +103,7 @@ public class BuffListData implements IXmlReader
 	 * @param sh
 	 * @return List<SkillHolder>
 	 */
-	public boolean getBuffPlayer(L2PcInstance player, SkillHolder sh)
+	public boolean getBuffPlayer(PlayerHolder player, SkillHolder sh)
 	{
 		if (_buffsPlayers.containsKey(player.getObjectId()))
 		{
@@ -123,7 +123,7 @@ public class BuffListData implements IXmlReader
 	 * @param player
 	 * @param sh
 	 */
-	public void deleteBuffPlayer(L2PcInstance player, SkillHolder sh)
+	public void deleteBuffPlayer(PlayerHolder player, SkillHolder sh)
 	{
 		for (SkillHolder aux : _buffsPlayers.get(player.getObjectId()))
 		{
@@ -140,7 +140,7 @@ public class BuffListData implements IXmlReader
 	 * @param player
 	 * @param sh
 	 */
-	public void addBuffPlayer(L2PcInstance player, SkillHolder sh)
+	public void addBuffPlayer(PlayerHolder player, SkillHolder sh)
 	{
 		if (_buffsPlayers.containsKey(player.getObjectId()))
 		{
@@ -159,7 +159,7 @@ public class BuffListData implements IXmlReader
 	 * Clean buff list of a character without deleting the character from the list.
 	 * @param player
 	 */
-	public void clearBuffsPlayer(L2PcInstance player)
+	public void clearBuffsPlayer(PlayerHolder player)
 	{
 		if (_buffsPlayers.containsKey(player.getObjectId()))
 		{

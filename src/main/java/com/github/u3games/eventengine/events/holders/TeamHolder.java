@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.github.u3games.eventengine.enums.TeamType;
 import com.github.u3games.eventengine.interfaces.ParticipantHolder;
-import com.l2jserver.gameserver.model.Location;
+import com.github.u3games.eventengine.model.ELocation;
 import com.l2jserver.util.Rnd;
 
 /**
@@ -37,14 +37,14 @@ public class TeamHolder implements ParticipantHolder
 	// Amount of points
 	private final AtomicInteger _points = new AtomicInteger(0);
 	// Team Spawn
-	private Location _teamSpawn = new Location(0, 0, 0);
-	private final List<Location> _teamSpawns = new ArrayList<>();
+	private ELocation _teamSpawn = new ELocation(0, 0, 0);
+	private final List<ELocation> _teamSpawns = new ArrayList<>();
 	
 	/**
 	 * Constructor.
 	 * @param teamColor
 	 */
-	public TeamHolder(String teamName, TeamType teamColor, Collection<Location> spawns)
+	public TeamHolder(String teamName, TeamType teamColor, Collection<ELocation> spawns)
 	{
 		_teamName = teamName;
 		_teamType = teamColor;
@@ -74,12 +74,12 @@ public class TeamHolder implements ParticipantHolder
 	 * Define the spawn of a team.
 	 * @param loc
 	 */
-	public void setSpawn(Location loc)
+	public void setSpawn(ELocation loc)
 	{
 		_teamSpawn = loc;
 	}
 
-	public void setSpawns(Collection<Location> locs)
+	public void setSpawns(Collection<ELocation> locs)
 	{
 		_teamSpawns.addAll(locs);
 	}
@@ -88,7 +88,7 @@ public class TeamHolder implements ParticipantHolder
 	 * Get the spawn of a team.
 	 * @return
 	 */
-	public Location getSpawn()
+	public ELocation getSpawn()
 	{
 		// TODO Remove this
 		if (_teamSpawns.size() <= 0)

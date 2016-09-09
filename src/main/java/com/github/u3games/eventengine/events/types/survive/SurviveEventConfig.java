@@ -4,7 +4,6 @@ import com.github.u3games.eventengine.config.interfaces.EventConfig;
 import com.github.u3games.eventengine.model.EItemHolder;
 import com.github.u3games.eventengine.model.ELocation;
 import com.github.u3games.eventengine.util.ConvertUtils;
-import com.l2jserver.gameserver.model.Location;
 import com.l2jserver.gameserver.model.holders.ItemHolder;
 
 import java.util.List;
@@ -31,8 +30,8 @@ public class SurviveEventConfig implements EventConfig {
         return ConvertUtils.convertToListItemsHolders(reward);
     }
 
-    public List<Location> getCoordinatesMobs() {
-        return ConvertUtils.convertToListLocations(coordinatesMobs);
+    public List<ELocation> getCoordinatesMobs() {
+        return coordinatesMobs;
     }
 
     public List<Integer> getMobsID() {
@@ -43,7 +42,7 @@ public class SurviveEventConfig implements EventConfig {
         return mobsSpawnForStage;
     }
 
-    public List<Location> getCoordinates() {
-        return ConvertUtils.convertToListLocations(coordinates);
+    public List<ELocation> getCoordinates() {
+        return coordinates;
     }
 }

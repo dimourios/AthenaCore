@@ -41,34 +41,24 @@ import com.github.u3games.eventengine.events.handler.managers.PlayersManager;
 import com.github.u3games.eventengine.events.handler.managers.ScheduledEventsManager;
 import com.github.u3games.eventengine.events.handler.managers.SpawnManager;
 import com.github.u3games.eventengine.events.handler.managers.TeamsManagers;
-import com.github.u3games.eventengine.events.holders.NpcHolder;
 import com.github.u3games.eventengine.events.holders.PlayerHolder;
-import com.github.u3games.eventengine.events.listeners.EventEngineListener;
 import com.github.u3games.eventengine.events.schedules.AnnounceNearEndEvent;
 import com.github.u3games.eventengine.events.schedules.AnnounceTeleportEvent;
 import com.github.u3games.eventengine.events.schedules.ChangeToEndEvent;
 import com.github.u3games.eventengine.events.schedules.ChangeToFightEvent;
 import com.github.u3games.eventengine.events.schedules.ChangeToStartEvent;
 import com.github.u3games.eventengine.interfaces.IListenerSuscriber;
+import com.github.u3games.eventengine.model.ELocation;
 import com.github.u3games.eventengine.util.EventUtil;
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.instancemanager.InstanceManager;
-import com.l2jserver.gameserver.model.L2Party;
-import com.l2jserver.gameserver.model.L2Party.messageType;
 import com.l2jserver.gameserver.model.Location;
 import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.actor.L2Npc;
 import com.l2jserver.gameserver.model.actor.L2Playable;
-import com.l2jserver.gameserver.model.actor.L2Summon;
-import com.l2jserver.gameserver.model.actor.instance.L2CubicInstance;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
-import com.l2jserver.gameserver.model.holders.ItemHolder;
-import com.l2jserver.gameserver.model.holders.SkillHolder;
 import com.l2jserver.gameserver.model.instancezone.InstanceWorld;
 import com.l2jserver.gameserver.model.items.L2Item;
 import com.l2jserver.gameserver.model.skills.Skill;
-import com.l2jserver.gameserver.network.serverpackets.SkillCoolTime;
-import com.l2jserver.gameserver.taskmanager.DecayTaskManager;
 import com.l2jserver.util.Rnd;
 
 /**
@@ -78,8 +68,6 @@ public abstract class AbstractEvent implements IListenerSuscriber
 {
 	// Logger
 	private static final Logger LOGGER = Logger.getLogger(AbstractEvent.class.getName());
-	// Max delay time for reuse skill
-	private static final int MAX_DELAY_TIME_SKILL = 900000;
 	
 	public AbstractEvent(String instanceFile)
 	{
@@ -523,7 +511,7 @@ public abstract class AbstractEvent implements IListenerSuscriber
 			// Adjust the instance that owns the character
 			ph.setDinamicInstanceId(world.getInstanceId());
 			// We add the character to the world and then be teleported
-			world.addAllowed(ph.getPcInstance().getObjectId());
+			world.addAllowed(ph.getObjectId());
 			teleportPlayer(ph, _radius);
 			ph.setProtectionTimeEnd(System.currentTimeMillis() + (getConfig().getSpawnProtectionTime() * 1000)); // Milliseconds
 		}
@@ -550,12 +538,12 @@ public abstract class AbstractEvent implements IListenerSuscriber
 	protected void teleportPlayer(PlayerHolder ph, int radius)
 	{
 		// Get the spawn defined at the start of each event
-		Location loc = getTeamsManager().getTeamSpawn(ph.getTeamType());
+		ELocation loc = getTeamsManager().getTeamSpawn(ph.getTeamType());
 		loc.setInstanceId(ph.getDinamicInstanceId());
 		loc.setX(loc.getX() + Rnd.get(-radius, radius));
 		loc.setY(loc.getY() + Rnd.get(-radius, radius));
 		// teleport to character
-		ph.getPcInstance().teleToLocation(loc, false);
+		ph.teleToLocation(loc);
 	}
 
 	protected void teleportPlayer(PlayerHolder ph)
@@ -582,9 +570,9 @@ public abstract class AbstractEvent implements IListenerSuscriber
 	{
 		for (PlayerHolder ph : getPlayerEventManager().getAllEventPlayers())
 		{
-			cancelAllPlayerActions(ph);
-			cancelAllEffects(ph);
-			Location returnLoc = ph.getPcInstance().getLocation();
+			ph.cancelAllPlayerActions();
+			ph.cancelAllEffects();
+			ELocation returnLoc = ph.getLocation();
 			ph.setReturnLoc(new Location(returnLoc.getX(), returnLoc.getY(), returnLoc.getZ()));
 		}
 		_teamsManagers.createTeams(onCreateTeams());
@@ -603,7 +591,7 @@ public abstract class AbstractEvent implements IListenerSuscriber
 	{
 		for (PlayerHolder ph : getPlayerEventManager().getAllEventPlayers())
 		{
-			giveBuffPlayer(ph.getPcInstance());
+			giveBuffPlayer(ph);
 		}
 	}
 	
@@ -625,8 +613,8 @@ public abstract class AbstractEvent implements IListenerSuscriber
 		for (PlayerHolder ph : getPlayerEventManager().getAllEventPlayers())
 		{
 			revivePlayer(ph);
-			cancelAllPlayerActions(ph);
-			cancelAllEffects(ph);
+			ph.cancelAllPlayerActions();
+			ph.cancelAllEffects();
 			removePlayerFromEvent(ph, false);
 		}
 		getScheduledEventsManager().cancelTaskControlTime();
@@ -652,11 +640,11 @@ public abstract class AbstractEvent implements IListenerSuscriber
 	{
 		try
 		{
-			EventUtil.sendEventMessage(player, MessageData.getInstance().getMsgByLang(player.getPcInstance(), "revive_in", true).replace("%time%", time + ""));
+			EventUtil.sendEventMessage(player, MessageData.getInstance().getMsgByLang(player, "revive_in", true).replace("%time%", time + ""));
 			_revivePending.add(ThreadPoolManager.getInstance().scheduleGeneral(() ->
 			{
 				revivePlayer(player);
-				giveBuffPlayer(player.getPcInstance());
+				giveBuffPlayer(player);
 				teleportPlayer(player);
 			}, time * 1000));
 		}
@@ -684,14 +672,11 @@ public abstract class AbstractEvent implements IListenerSuscriber
 	 */
 	protected void revivePlayer(PlayerHolder ph)
 	{
-		if (ph.getPcInstance().isDead())
+		if (ph.isDead())
 		{
-			DecayTaskManager.getInstance().cancel(ph.getPcInstance());
-			ph.getPcInstance().doRevive();
-			// heal to max
-			ph.getPcInstance().setCurrentCp(ph.getPcInstance().getMaxCp());
-			ph.getPcInstance().setCurrentHp(ph.getPcInstance().getMaxHp());
-			ph.getPcInstance().setCurrentMp(ph.getPcInstance().getMaxMp());
+			ph.cancelDecay();
+			ph.revive();
+			ph.setFullHealth();
 			ph.setProtectionTimeEnd(System.currentTimeMillis() + (getConfig().getSpawnProtectionTime() * 1000)); // Milliseconds
 		}
 	}
@@ -700,109 +685,11 @@ public abstract class AbstractEvent implements IListenerSuscriber
 	 * We give you the buff to a player set within configs.
 	 * @param player
 	 */
-	public void giveBuffPlayer(L2PcInstance player)
+	public void giveBuffPlayer(PlayerHolder player)
 	{
-		for (SkillHolder sh : BuffListData.getInstance().getBuffsPlayer(player))
-		{
-			sh.getSkill().applyEffects(player, player);
-		}
+		player.applyEffects(BuffListData.getInstance().getBuffsPlayer(player));
 	}
-	
-	/**
-	 * We deliver the items in a list defined as. Created in order to deliver rewards in the events.
-	 * @param ph
-	 * @param items
-	 */
-	public void giveItems(PlayerHolder ph, List<ItemHolder> items)
-	{
-		for (ItemHolder reward : items)
-		{
-			ph.getPcInstance().addItem("eventReward", reward.getId(), reward.getCount(), null, true);
-		}
-	}
-	
-	/**
-	 * <ul>
-	 * <b>Actions:</b>
-	 * </ul>
-	 * <li>Cancel target.</li>
-	 * <li>Cancel cast.</li>
-	 * <li>Cancel attack.</li>
-	 * @param ph
-	 */
-	public void cancelAllPlayerActions(PlayerHolder ph)
-	{
-		// Cancel target
-		ph.getPcInstance().setTarget(null);
-		// Cancel any attack in progress
-		ph.getPcInstance().breakAttack();
-		// Cancel any skill in progress
-		ph.getPcInstance().breakCast();
-	}
-	
-	/**
-	 * <ul>
-	 * <b>Actions:</b>
-	 * </ul>
-	 * <li>Stop all effects from player and summon.</li>
-	 * @param ph
-	 */
-	public void cancelAllEffects(PlayerHolder ph)
-	{
-		// Stop all effects
-		ph.getPcInstance().stopAllEffects();
-		// Check Transform
-		if (ph.getPcInstance().isTransformed())
-		{
-			ph.getPcInstance().untransform();
-		}
-		// Check Summon's and pets
-		if (ph.getPcInstance().hasSummon())
-		{
-			final L2Summon summon = ph.getPcInstance().getSummon();
-			summon.stopAllEffectsExceptThoseThatLastThroughDeath();
-			summon.abortAttack();
-			summon.abortCast();
-			// Remove
-			summon.unSummon(ph.getPcInstance());
-		}
-		
-		// Cancel all character cubics
-		for (L2CubicInstance cubic : ph.getPcInstance().getCubics().values())
-		{
-			cubic.stopAction();
-			cubic.cancelDisappear();
-		}
-		// Stop any cubic that has been given by other player
-		ph.getPcInstance().stopCubicsByOthers();
-		
-		// Remove player from his party
-		final L2Party party = ph.getPcInstance().getParty();
-		if (party != null)
-		{
-			party.removePartyMember(ph.getPcInstance(), messageType.Expelled);
-		}
-		
-		// Remove Agathion
-		if (ph.getPcInstance().getAgathionId() > 0)
-		{
-			ph.getPcInstance().setAgathionId(0);
-			ph.getPcInstance().broadcastUserInfo();
-		}
-		
-		// Remove reuse delay skills
-		for (Skill skill : ph.getPcInstance().getAllSkills())
-		{
-			if (skill.getReuseDelay() <= MAX_DELAY_TIME_SKILL)
-			{
-				ph.getPcInstance().enableSkill(skill);
-			}
-		}
-		// Check Skills
-		ph.getPcInstance().sendSkillList();
-		ph.getPcInstance().sendPacket(new SkillCoolTime(ph.getPcInstance()));
-	}
-	
+
 	/**
 	 * <ul>
 	 * <b>Actions:</b>
@@ -815,19 +702,12 @@ public abstract class AbstractEvent implements IListenerSuscriber
 	 */
 	public void removePlayerFromEvent(PlayerHolder ph, boolean forceRemove)
 	{
-		// Recovers player's title and color
-		ph.recoverOriginalColorTitle();
-		ph.recoverOriginalTitle();
-		// Remove the player from world instance
-		InstanceManager.getInstance().getPlayerWorld(ph.getPcInstance()).removeAllowed(ph.getPcInstance().getObjectId());
-		ph.getPcInstance().setInstanceId(0);
-		// Remove the player from event listener (it's used to deny the manual res)
-		ph.getPcInstance().removeEventListener(EventEngineListener.class);
 		if (forceRemove)
 		{
 			getPlayerEventManager().getAllEventPlayers().remove(ph);
 		}
-		ph.getPcInstance().teleToLocation(ph.getReturnLoc());
+
+		ph.removePlayerFromEvent();
 	}
 
 	/**

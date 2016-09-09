@@ -23,11 +23,11 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.github.u3games.eventengine.events.holders.NpcHolder;
+import com.github.u3games.eventengine.model.ELocation;
 import com.l2jserver.gameserver.data.xml.impl.NpcData;
 import com.l2jserver.gameserver.datatables.SpawnTable;
 import com.l2jserver.gameserver.enums.Team;
 import com.l2jserver.gameserver.model.L2Spawn;
-import com.l2jserver.gameserver.model.Location;
 import com.l2jserver.gameserver.model.actor.L2Npc;
 import com.l2jserver.gameserver.model.actor.templates.L2NpcTemplate;
 import com.l2jserver.gameserver.network.serverpackets.MagicSkillUse;
@@ -49,7 +49,7 @@ public class SpawnManager
 	 * @param instanceId
 	 * @return
 	 */
-	public NpcHolder addEventNpc(int npcId, Location loc, Team team, int instanceId)
+	public NpcHolder addEventNpc(int npcId, ELocation loc, Team team, int instanceId)
 	{
 		return addEventNpc(npcId, loc.getX(), loc.getY(), loc.getZ(), loc.getHeading(), team, null, false, instanceId);
 	}
@@ -63,7 +63,7 @@ public class SpawnManager
 	 * @param instanceId
 	 * @return
 	 */
-	public NpcHolder addEventNpc(int npcId, Location loc, Team team, boolean randomOffset, int instanceId)
+	public NpcHolder addEventNpc(int npcId, ELocation loc, Team team, boolean randomOffset, int instanceId)
 	{
 		return addEventNpc(npcId, loc.getX(), loc.getY(), loc.getZ(), loc.getHeading(), team, null, randomOffset, instanceId);
 	}
@@ -78,7 +78,7 @@ public class SpawnManager
 	 * @param instanceId
 	 * @return
 	 */
-	public NpcHolder addEventNpc(int npcId, Location loc, Team team, String title, boolean randomOffset, int instanceId)
+	public NpcHolder addEventNpc(int npcId, ELocation loc, Team team, String title, boolean randomOffset, int instanceId)
 	{
 		return addEventNpc(npcId, loc.getX(), loc.getY(), loc.getZ(), loc.getHeading(), team, null, randomOffset, instanceId);
 	}

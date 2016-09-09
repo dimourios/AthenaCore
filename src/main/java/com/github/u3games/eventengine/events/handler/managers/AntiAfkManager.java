@@ -28,9 +28,9 @@ import com.github.u3games.eventengine.config.BaseConfigLoader;
 import com.github.u3games.eventengine.enums.CollectionTarget;
 import com.github.u3games.eventengine.events.handler.AbstractEvent;
 import com.github.u3games.eventengine.events.holders.PlayerHolder;
+import com.github.u3games.eventengine.model.ELocation;
 import com.github.u3games.eventengine.util.EventUtil;
 import com.l2jserver.gameserver.ThreadPoolManager;
-import com.l2jserver.gameserver.model.Location;
 import com.l2jserver.gameserver.network.clientpackets.Say2;
 
 /**
@@ -42,7 +42,7 @@ import com.l2jserver.gameserver.network.clientpackets.Say2;
  */
 public class AntiAfkManager
 {
-	private final Map<PlayerHolder, Location> _playersAfkCheck = new ConcurrentHashMap<>();
+	private final Map<PlayerHolder, ELocation> _playersAfkCheck = new ConcurrentHashMap<>();
 	private ScheduledFuture<?> _taskAntiAfk;
 	
 	/**
@@ -64,26 +64,26 @@ public class AntiAfkManager
 		_taskAntiAfk = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(() ->
 		{
 			AbstractEvent currentEvent = EventEngineManager.getInstance().getCurrentEvent();
-			Map<PlayerHolder, Location> newMap = new HashMap<>();
+			Map<PlayerHolder, ELocation> newMap = new HashMap<>();
 			
 			for (PlayerHolder ph : currentEvent.getPlayerEventManager().getAllEventPlayers())
 			{
-				Location currentLoc = ph.getPcInstance().getLocation();
+				ELocation currentLoc = ph.getLocation();
 				if (_playersAfkCheck.containsKey(ph))
 				{
-					Location previousLoc = _playersAfkCheck.get(ph);
+					ELocation previousLoc = _playersAfkCheck.get(ph);
 					if (previousLoc.equals(currentLoc))
 					{
 						currentEvent.cancelAllPlayerActions(ph);
 						currentEvent.cancelAllEffects(ph);
 						currentEvent.removePlayerFromEvent(ph, true);
 						EventUtil.sendMessageToPlayer(ph, "antiafk_player_kicked");
-						EventUtil.announceTo(Say2.SHOUT, "antiafk_player_kicked_announce", "%player%", ph.getPcInstance().getName(), CollectionTarget.ALL_PLAYERS_IN_EVENT);
+						EventUtil.announceTo(Say2.SHOUT, "antiafk_player_kicked_announce", "%player%", ph.getName(), CollectionTarget.ALL_PLAYERS_IN_EVENT);
 						continue;
 					}
 				}
 				// It's not correct use the currentLoc object
-				newMap.put(ph, new Location(currentLoc.getX(), currentLoc.getY(), currentLoc.getZ(), currentLoc.getHeading(), currentLoc.getInstanceId()));
+				newMap.put(ph, new ELocation(currentLoc.getX(), currentLoc.getY(), currentLoc.getZ(), currentLoc.getHeading(), currentLoc.getInstanceId()));
 			}
 			// Clear list
 			_playersAfkCheck.clear();

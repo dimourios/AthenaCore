@@ -30,11 +30,11 @@ import com.github.u3games.eventengine.enums.ScoreType;
 import com.github.u3games.eventengine.events.handler.AbstractEvent;
 import com.github.u3games.eventengine.events.holders.PlayerHolder;
 import com.github.u3games.eventengine.events.holders.TeamHolder;
+import com.github.u3games.eventengine.model.ELocation;
 import com.github.u3games.eventengine.util.EventUtil;
 import com.github.u3games.eventengine.util.SortUtils;
 import com.l2jserver.gameserver.ThreadPoolManager;
 import com.l2jserver.gameserver.enums.Team;
-import com.l2jserver.gameserver.model.Location;
 import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.network.clientpackets.Say2;
 import com.l2jserver.util.Rnd;
@@ -178,7 +178,7 @@ public class Survive extends AbstractEvent
 		{
 			for (int i = 0; i < (_stage * getConfig().getMobsSpawnForStage()); i++)
 			{
-				Location rndLoc = getConfig().getCoordinatesMobs().get(Rnd.get(getConfig().getCoordinatesMobs().size() - 1));
+				ELocation rndLoc = getConfig().getCoordinatesMobs().get(Rnd.get(getConfig().getCoordinatesMobs().size() - 1));
 				getSpawnManager().addEventNpc(MONSTERS_ID.get(Rnd.get(MONSTERS_ID.size() - 1)), rndLoc, Team.RED, true, getInstanceWorldManager().getAllInstancesWorlds().get(0).getInstanceId());
 			}
 			// We notify the characters in the event that stage they are currently
@@ -200,6 +200,6 @@ public class Survive extends AbstractEvent
 		// Adjust the title character
 		player.setNewTitle("Monster Death " + player.getKills());
 		// Adjust the status character
-		player.getPcInstance().updateAndBroadcastStatus(2);
+		player.updateAndBroadcastStatus(2);
 	}
 }

@@ -28,7 +28,7 @@ import com.github.u3games.eventengine.enums.DistributionType;
 import com.github.u3games.eventengine.enums.TeamType;
 import com.github.u3games.eventengine.events.holders.PlayerHolder;
 import com.github.u3games.eventengine.events.holders.TeamHolder;
-import com.l2jserver.gameserver.model.Location;
+import com.github.u3games.eventengine.model.ELocation;
 
 public class TeamsBuilder
 {
@@ -39,7 +39,7 @@ public class TeamsBuilder
 
 	private final List<TeamHolder> mTeams = new ArrayList<>();
 
-	public TeamsBuilder addTeam(List<Location> locations) {
+	public TeamsBuilder addTeam(List<ELocation> locations) {
 		mTeams.add(new TeamHolder("", TeamType.WHITE, locations));
 		return this;
 	}

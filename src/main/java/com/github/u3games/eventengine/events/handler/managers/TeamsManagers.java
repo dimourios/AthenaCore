@@ -27,7 +27,7 @@ import com.github.u3games.eventengine.builders.TeamsBuilder;
 import com.github.u3games.eventengine.enums.TeamType;
 import com.github.u3games.eventengine.events.holders.PlayerHolder;
 import com.github.u3games.eventengine.events.holders.TeamHolder;
-import com.l2jserver.gameserver.model.Location;
+import com.github.u3games.eventengine.model.ELocation;
 
 /**
  * @author fissban
@@ -81,7 +81,7 @@ public class TeamsManagers
 	 * @param team
 	 * @param loc
 	 */
-	public void setSpawn(TeamType team, Location loc)
+	public void setSpawn(TeamType team, ELocation loc)
 	{
 		_teams.get(team).setSpawn(loc);
 	}
@@ -91,7 +91,7 @@ public class TeamsManagers
 	 * @param team
 	 * @return ELocation
 	 */
-	public Location getTeamSpawn(TeamType team)
+	public ELocation getTeamSpawn(TeamType team)
 	{
 		return _teams.get(team).getSpawn();
 	}
