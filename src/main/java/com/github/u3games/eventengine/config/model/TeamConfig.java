@@ -1,7 +1,7 @@
 package com.github.u3games.eventengine.config.model;
 
 import com.github.u3games.eventengine.enums.TeamType;
-import com.github.u3games.eventengine.model.ELocation;
+import com.github.u3games.eventengine.core.model.ELocation;
 
 import java.util.List;
 

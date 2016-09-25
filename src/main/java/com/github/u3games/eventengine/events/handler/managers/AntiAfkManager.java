@@ -28,7 +28,7 @@ import com.github.u3games.eventengine.config.BaseConfigLoader;
 import com.github.u3games.eventengine.enums.CollectionTarget;
 import com.github.u3games.eventengine.events.handler.AbstractEvent;
 import com.github.u3games.eventengine.events.holders.PlayerHolder;
-import com.github.u3games.eventengine.model.ELocation;
+import com.github.u3games.eventengine.core.model.ELocation;
 import com.github.u3games.eventengine.util.EventUtil;
 import com.l2jserver.gameserver.ThreadPoolManager;
 import com.l2jserver.gameserver.network.clientpackets.Say2;

@@ -30,7 +30,7 @@ import com.github.u3games.eventengine.enums.ScoreType;
 import com.github.u3games.eventengine.events.handler.AbstractEvent;
 import com.github.u3games.eventengine.events.holders.PlayerHolder;
 import com.github.u3games.eventengine.events.holders.TeamHolder;
-import com.github.u3games.eventengine.model.ELocation;
+import com.github.u3games.eventengine.core.model.ELocation;
 import com.github.u3games.eventengine.util.EventUtil;
 import com.github.u3games.eventengine.util.SortUtils;
 import com.l2jserver.gameserver.ThreadPoolManager;

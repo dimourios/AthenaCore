@@ -1,4 +1,4 @@
-package com.github.u3games.eventengine.model;
+package com.github.u3games.eventengine.core.model;
 
 public class ELocation {
 

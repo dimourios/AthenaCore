@@ -23,7 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.github.u3games.eventengine.enums.TeamType;
 import com.github.u3games.eventengine.interfaces.ParticipantHolder;
-import com.github.u3games.eventengine.model.ELocation;
+import com.github.u3games.eventengine.core.model.ELocation;
 import com.l2jserver.util.Rnd;
 
 /**

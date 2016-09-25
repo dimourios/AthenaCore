@@ -27,7 +27,7 @@ import com.github.u3games.eventengine.builders.TeamsBuilder;
 import com.github.u3games.eventengine.enums.TeamType;
 import com.github.u3games.eventengine.events.holders.PlayerHolder;
 import com.github.u3games.eventengine.events.holders.TeamHolder;
-import com.github.u3games.eventengine.model.ELocation;
+import com.github.u3games.eventengine.core.model.ELocation;
 
 /**
  * @author fissban

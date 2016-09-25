@@ -1,7 +1,7 @@
 package com.github.u3games.eventengine.util;
 
 import com.github.u3games.eventengine.model.EItemHolder;
-import com.github.u3games.eventengine.model.ELocation;
+import com.github.u3games.eventengine.core.model.ELocation;
 import com.l2jserver.gameserver.model.Location;
 import com.l2jserver.gameserver.model.holders.ItemHolder;
 

@@ -1,7 +1,7 @@
 package com.github.u3games.eventengine.events.types.capturetheflag;
 
 import com.github.u3games.eventengine.config.model.TeamConfig;
-import com.github.u3games.eventengine.model.ELocation;
+import com.github.u3games.eventengine.core.model.ELocation;
 import com.l2jserver.gameserver.model.Location;
 
 public class CTFTeamConfig extends TeamConfig {

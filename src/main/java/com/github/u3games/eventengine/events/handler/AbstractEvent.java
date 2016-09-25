@@ -48,7 +48,7 @@ import com.github.u3games.eventengine.events.schedules.ChangeToEndEvent;
 import com.github.u3games.eventengine.events.schedules.ChangeToFightEvent;
 import com.github.u3games.eventengine.events.schedules.ChangeToStartEvent;
 import com.github.u3games.eventengine.interfaces.IListenerSuscriber;
-import com.github.u3games.eventengine.model.ELocation;
+import com.github.u3games.eventengine.core.model.ELocation;
 import com.github.u3games.eventengine.util.EventUtil;
 import com.l2jserver.gameserver.ThreadPoolManager;
 import com.l2jserver.gameserver.model.Location;

@@ -18,21 +18,16 @@
  */
 package com.github.u3games.eventengine.events.holders;
 
-import com.github.u3games.eventengine.datatables.BuffListData;
+import com.github.u3games.eventengine.api.adapter.APIPlayer;
 import com.github.u3games.eventengine.enums.TeamType;
-import com.github.u3games.eventengine.events.listeners.EventEngineListener;
+import com.github.u3games.eventengine.api.listeners.EventEngineListener;
 import com.github.u3games.eventengine.interfaces.ParticipantHolder;
-import com.github.u3games.eventengine.model.ELocation;
+import com.github.u3games.eventengine.core.model.ELocation;
 import com.l2jserver.gameserver.instancemanager.InstanceManager;
-import com.l2jserver.gameserver.model.L2Party;
 import com.l2jserver.gameserver.model.Location;
-import com.l2jserver.gameserver.model.actor.L2Summon;
-import com.l2jserver.gameserver.model.actor.instance.L2CubicInstance;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.model.holders.ItemHolder;
 import com.l2jserver.gameserver.model.holders.SkillHolder;
-import com.l2jserver.gameserver.model.skills.Skill;
-import com.l2jserver.gameserver.network.serverpackets.SkillCoolTime;
 import com.l2jserver.gameserver.taskmanager.DecayTaskManager;
 
 import java.util.Set;
@@ -313,58 +308,7 @@ public class PlayerHolder implements ParticipantHolder
 
 	public void cancelAllEffects()
 	{
-		// Stop all effects
-		_player.stopAllEffects();
-		// Check Transform
-		if (_player.isTransformed())
-		{
-			_player.untransform();
-		}
-		// Check Summon's and pets
-		if (_player.hasSummon())
-		{
-			final L2Summon summon = _player.getSummon();
-			summon.stopAllEffectsExceptThoseThatLastThroughDeath();
-			summon.abortAttack();
-			summon.abortCast();
-			// Remove
-			summon.unSummon(_player);
-		}
-
-		// Cancel all character cubics
-		for (L2CubicInstance cubic : _player.getCubics().values())
-		{
-			cubic.stopAction();
-			cubic.cancelDisappear();
-		}
-		// Stop any cubic that has been given by other player
-		_player.stopCubicsByOthers();
-
-		// Remove player from his party
-		final L2Party party = _player.getParty();
-		if (party != null)
-		{
-			party.removePartyMember(_player, L2Party.messageType.Expelled);
-		}
-
-		// Remove Agathion
-		if (_player.getAgathionId() > 0)
-		{
-			_player.setAgathionId(0);
-			_player.broadcastUserInfo();
-		}
-
-		// Remove reuse delay skills
-		for (Skill skill : _player.getAllSkills())
-		{
-			if (skill.getReuseDelay() <= MAX_DELAY_TIME_SKILL)
-			{
-				_player.enableSkill(skill);
-			}
-		}
-		// Check Skills
-		_player.sendSkillList();
-		_player.sendPacket(new SkillCoolTime(_player));
+		APIPlayer.getInstance().cancelAllEffects(this, MAX_DELAY_TIME_SKILL);
 	}
 
 	public void removePlayerFromEvent()

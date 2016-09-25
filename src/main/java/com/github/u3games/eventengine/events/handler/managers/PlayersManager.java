@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.github.u3games.eventengine.EventEngineManager;
 import com.github.u3games.eventengine.events.holders.PlayerHolder;
-import com.github.u3games.eventengine.events.listeners.EventEngineListener;
+import com.github.u3games.eventengine.api.listeners.EventEngineListener;
 import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.actor.L2Playable;
 import com.l2jserver.gameserver.model.actor.L2Summon;
