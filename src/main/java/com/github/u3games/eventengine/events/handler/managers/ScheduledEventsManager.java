@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 
+import com.github.u3games.eventengine.core.model.ETask;
 import com.github.u3games.eventengine.events.schedules.interfaces.EventScheduled;
 import com.l2jserver.gameserver.ThreadPoolManager;
 
@@ -37,12 +38,12 @@ public class ScheduledEventsManager
 	// Scheduled events
 	private final Map<Integer, List<EventScheduled>> _scheduledEvents = new HashMap<>();
 	// Task that control the event time
-	private ScheduledFuture<?> _taskControlTime;
+	private ETask _taskControlTime;
 	
 	public void startTaskControlTime()
 	{
 		_currentTime = 0;
-		_taskControlTime = ThreadPoolManager.getInstance().scheduleGeneralAtFixedRate(() ->
+		_taskControlTime = ETask.newInstance(() ->
 		{
 			_currentTime += 1000;
 			checkScheduledEvents();
@@ -54,7 +55,7 @@ public class ScheduledEventsManager
 		_taskControlTime.cancel(true);
 	}
 	
-	public ScheduledFuture<?> getTaskControlTime()
+	public ETask getTaskControlTime()
 	{
 		return _taskControlTime;
 	}

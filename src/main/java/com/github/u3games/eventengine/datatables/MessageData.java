@@ -27,7 +27,7 @@ import java.util.logging.Logger;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import com.github.u3games.eventengine.events.holders.PlayerHolder;
+import com.github.u3games.eventengine.core.model.entity.EPlayer;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -41,7 +41,7 @@ public final class MessageData
 	private static final String DIRECTORY = "config/EventEngine/language";
 	private static final String DEFAULT_LANG = "en";
 	// Map to identify the language of each character
-	private final Map<PlayerHolder, String> _playerCurrentLang = new HashMap<>();
+	private final Map<EPlayer, String> _playerCurrentLang = new HashMap<>();
 	private final Map<String, String> _msgMap = new HashMap<>();
 	private final Map<String, String> _languages = new HashMap<>();
 	
@@ -133,7 +133,7 @@ public final class MessageData
 	 * @param addTag Used for screen or chat messages.
 	 * @return String
 	 */
-	public String getMsgByLang(PlayerHolder player, String text, boolean addTag)
+	public String getMsgByLang(EPlayer player, String text, boolean addTag)
 	{
 		// Get the language by which the user chooses
 		String lang = getLanguage(player);
@@ -183,7 +183,7 @@ public final class MessageData
 	 * @param player
 	 * @param lang
 	 */
-	public void setLanguage(PlayerHolder player, String lang)
+	public void setLanguage(EPlayer player, String lang)
 	{
 		_playerCurrentLang.put(player, lang);
 	}
@@ -193,7 +193,7 @@ public final class MessageData
 	 * @param player
 	 * @return String
 	 */
-	public String getLanguage(PlayerHolder player)
+	public String getLanguage(EPlayer player)
 	{
 		if (_playerCurrentLang.containsKey(player))
 		{

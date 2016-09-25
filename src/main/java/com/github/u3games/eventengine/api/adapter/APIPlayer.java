@@ -5,6 +5,7 @@ import com.github.u3games.eventengine.core.model.entity.EPlayer;
 import com.github.u3games.eventengine.core.model.holder.EItemHolder;
 import com.github.u3games.eventengine.core.model.holder.ESkillHolder;
 import com.github.u3games.eventengine.api.listeners.EventEngineListener;
+import com.github.u3games.eventengine.datatables.MessageData;
 import com.l2jserver.gameserver.instancemanager.InstanceManager;
 import com.l2jserver.gameserver.model.L2Party;
 import com.l2jserver.gameserver.model.L2World;
@@ -14,6 +15,8 @@ import com.l2jserver.gameserver.model.actor.instance.L2CubicInstance;
 import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 import com.l2jserver.gameserver.model.holders.SkillHolder;
 import com.l2jserver.gameserver.model.skills.Skill;
+import com.l2jserver.gameserver.network.clientpackets.Say2;
+import com.l2jserver.gameserver.network.serverpackets.CreatureSay;
 import com.l2jserver.gameserver.network.serverpackets.SkillCoolTime;
 import com.l2jserver.gameserver.taskmanager.DecayTaskManager;
 
@@ -44,6 +47,10 @@ public class APIPlayer {
     }
 
     // ------------- ACTIONS -------------
+
+    public void sendPartyRoomCommander(EPlayer ePlayer, String message) {
+        getPlayer(ePlayer).sendPacket(new CreatureSay(0, Say2.PARTYROOM_COMMANDER, "", message));
+    }
 
     public void removeFromEventInstance(EPlayer ePlayer, ELocation eLocation) {
         L2PcInstance player = getPlayer(ePlayer);

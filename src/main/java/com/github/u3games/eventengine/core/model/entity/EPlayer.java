@@ -4,6 +4,7 @@ import com.github.u3games.eventengine.api.adapter.APIPlayer;
 import com.github.u3games.eventengine.core.model.ELocation;
 import com.github.u3games.eventengine.core.model.holder.EItemHolder;
 import com.github.u3games.eventengine.core.model.holder.ESkillHolder;
+import com.github.u3games.eventengine.datatables.MessageData;
 import com.github.u3games.eventengine.enums.TeamType;
 import com.github.u3games.eventengine.events.holders.TeamHolder;
 import com.github.u3games.eventengine.interfaces.ParticipantHolder;
@@ -225,9 +226,21 @@ public class EPlayer extends EEntity implements ParticipantHolder {
         APIPlayer.getInstance().setTitleColor(this, color);
     }
 
-    public void sendMessage(String message)
+    public void sendCustomMessage(String message)
     {
         APIPlayer.getInstance().sendMessage(this, message);
+    }
+
+    public void sendPartyRoomCommander(String key, boolean tag) {
+        APIPlayer.getInstance().sendPartyRoomCommander(this, MessageData.getInstance().getMsgByLang(this, key, tag));
+    }
+
+    public void sendMessage(String key) {
+
+    }
+
+    public void sendMessage(String key, boolean tag) {
+
     }
 
     public void removePlayerFromEvent()

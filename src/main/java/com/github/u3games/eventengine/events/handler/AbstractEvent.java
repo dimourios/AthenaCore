@@ -21,13 +21,13 @@ package com.github.u3games.eventengine.events.handler;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ScheduledFuture;
 import java.util.logging.Logger;
 
 import com.github.u3games.eventengine.EventEngineManager;
 import com.github.u3games.eventengine.builders.TeamsBuilder;
 import com.github.u3games.eventengine.config.BaseConfigLoader;
 import com.github.u3games.eventengine.config.model.MainEventConfig;
+import com.github.u3games.eventengine.core.model.ETask;
 import com.github.u3games.eventengine.datatables.BuffListData;
 import com.github.u3games.eventengine.datatables.MessageData;
 import com.github.u3games.eventengine.dispatcher.ListenerDispatcher;
@@ -50,7 +50,6 @@ import com.github.u3games.eventengine.events.schedules.ChangeToStartEvent;
 import com.github.u3games.eventengine.interfaces.IListenerSuscriber;
 import com.github.u3games.eventengine.core.model.ELocation;
 import com.github.u3games.eventengine.util.EventUtil;
-import com.l2jserver.gameserver.ThreadPoolManager;
 import com.l2jserver.gameserver.model.Location;
 import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.actor.L2Npc;
@@ -189,11 +188,11 @@ public abstract class AbstractEvent implements IListenerSuscriber
 	}
 	
 	// REVIVE --------------------------------------------------------------------------------------- //
-	private final List<ScheduledFuture<?>> _revivePending = new CopyOnWriteArrayList<>();
+	private final List<ETask> _revivePending = new CopyOnWriteArrayList<>();
 	
 	private void stopAllPendingRevive()
 	{
-		Iterator<ScheduledFuture<?>> iterator = _revivePending.iterator();
+		Iterator<ETask> iterator = _revivePending.iterator();
 		while (iterator.hasNext())
 		{
 			iterator.next().cancel(true);
@@ -641,7 +640,7 @@ public abstract class AbstractEvent implements IListenerSuscriber
 		try
 		{
 			EventUtil.sendEventMessage(player, MessageData.getInstance().getMsgByLang(player, "revive_in", true).replace("%time%", time + ""));
-			_revivePending.add(ThreadPoolManager.getInstance().scheduleGeneral(() ->
+			_revivePending.add(ETask.newInstance(() ->
 			{
 				revivePlayer(player);
 				giveBuffPlayer(player);

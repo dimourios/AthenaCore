@@ -22,6 +22,7 @@ import java.util.List;
 
 import com.github.u3games.eventengine.builders.TeamsBuilder;
 import com.github.u3games.eventengine.config.BaseConfigLoader;
+import com.github.u3games.eventengine.core.model.ETask;
 import com.github.u3games.eventengine.dispatcher.events.OnAttackEvent;
 import com.github.u3games.eventengine.dispatcher.events.OnKillEvent;
 import com.github.u3games.eventengine.enums.CollectionTarget;
@@ -174,7 +175,7 @@ public class Survive extends AbstractEvent
 	{
 		EventUtil.announceTo(Say2.BATTLEFIELD, "survive_spawns_mobs", CollectionTarget.ALL_PLAYERS_IN_EVENT);
 		// After 5 secs spawn run
-		ThreadPoolManager.getInstance().scheduleGeneral(() ->
+		ETask.newInstance(() ->
 		{
 			for (int i = 0; i < (_stage * getConfig().getMobsSpawnForStage()); i++)
 			{

@@ -1,17 +1,17 @@
 package com.github.u3games.eventengine.dispatcher.events;
 
+import com.github.u3games.eventengine.core.model.entity.EPlayer;
 import com.github.u3games.eventengine.enums.ListenerType;
-import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 
 public class OnLogOutEvent extends ListenerEvent {
 
-    private final L2PcInstance mPlayer;
+    private final EPlayer mPlayer;
 
-    public OnLogOutEvent(L2PcInstance player) {
+    public OnLogOutEvent(EPlayer player) {
         mPlayer = player;
     }
 
-    public L2PcInstance getPlayer() {
+    public EPlayer getPlayer() {
         return mPlayer;
     }
 
