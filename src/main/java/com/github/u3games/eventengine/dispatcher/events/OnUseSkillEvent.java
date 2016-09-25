@@ -1,31 +1,30 @@
 package com.github.u3games.eventengine.dispatcher.events;
 
+import com.github.u3games.eventengine.core.model.ESkill;
+import com.github.u3games.eventengine.core.model.entity.EEntity;
 import com.github.u3games.eventengine.enums.ListenerType;
-import com.l2jserver.gameserver.model.actor.L2Character;
-import com.l2jserver.gameserver.model.actor.L2Playable;
-import com.l2jserver.gameserver.model.skills.Skill;
 
 public class OnUseSkillEvent extends ListenerEvent {
 
-    private final L2Playable mCaster;
-    private final Skill mSkill;
-    private final L2Character mTarget;
+    private final EEntity mCaster;
+    private final ESkill mSkill;
+    private final EEntity mTarget;
 
-    public OnUseSkillEvent(L2Playable caster, Skill skill, L2Character target) {
+    public OnUseSkillEvent(EEntity caster, ESkill skill, EEntity target) {
         mCaster = caster;
         mSkill = skill;
         mTarget = target;
     }
 
-    public L2Playable getCaster() {
+    public EEntity getCaster() {
         return mCaster;
     }
 
-    public Skill getSkill() {
+    public ESkill getSkill() {
         return mSkill;
     }
 
-    public L2Character getTarget() {
+    public EEntity getTarget() {
         return mTarget;
     }
 

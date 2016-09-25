@@ -22,26 +22,24 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.github.u3games.eventengine.EventEngineManager;
-import com.github.u3games.eventengine.events.holders.PlayerHolder;
-import com.github.u3games.eventengine.api.listeners.EventEngineListener;
-import com.l2jserver.gameserver.model.actor.L2Character;
-import com.l2jserver.gameserver.model.actor.L2Playable;
-import com.l2jserver.gameserver.model.actor.L2Summon;
-import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
+import com.github.u3games.eventengine.core.model.entity.EEntity;
+import com.github.u3games.eventengine.core.model.entity.EPlayer;
+import com.github.u3games.eventengine.core.model.entity.ESummon;
+import com.github.u3games.eventengine.manager.RegistrationManager;
+import com.github.u3games.eventengine.repository.PlayerRepository;
 
 /**
  * @author fissban
  */
 public class PlayersManager
 {
-	private final Map<Integer, PlayerHolder> _eventPlayers = new ConcurrentHashMap<>();
+	private final Map<Integer, EPlayer> _eventPlayers = new ConcurrentHashMap<>();
 	
 	/**
 	 * We obtain the full list of all players within an event.
 	 * @return Collection<PlayerHolder>
 	 */
-	public Collection<PlayerHolder> getAllEventPlayers()
+	public Collection<EPlayer> getAllEventPlayers()
 	{
 		return _eventPlayers.values();
 	}
@@ -54,8 +52,10 @@ public class PlayersManager
 	 */
 	public void createEventPlayers()
 	{
-		for (L2PcInstance player : EventEngineManager.getInstance().getAllRegisteredPlayers())
+		for (Integer playerId : RegistrationManager.getInstance().getAllRegisteredPlayers())
 		{
+			EPlayer player = PlayerRepository.getInstance().getPlayer(playerId);
+
 			// Check if player in olympiad
 			if (player.isInOlympiadMode())
 			{
@@ -69,51 +69,51 @@ public class PlayersManager
 				continue;
 			}
 			// Check if player in observer mode
-			if (player.inObserverMode())
+			if (player.isInObserverMode())
 			{
 				player.sendMessage("You can not attend the event being in the Observer mode.");
 				continue;
 			}
-			_eventPlayers.put(player.getObjectId(), new PlayerHolder(player));
-			player.addEventListener(new EventEngineListener(player));
+			_eventPlayers.put(player.getId(), player);
+			//player.addEventListener(new EventEngineListener(player));
 		}
 		// We clean the list, no longer we need it
-		EventEngineManager.getInstance().clearRegisteredPlayers();
+		RegistrationManager.getInstance().clearRegisteredPlayers();
 	}
 	
 	/**
 	 * Check if the playable is participating in any event. In the case of a summon, verify that the owner participates. For not participate in an event is returned <u>false.</u>
-	 * @param playable
+	 * @param entity
 	 * @return boolean
 	 */
-	public boolean isPlayableInEvent(L2Playable playable)
+	public boolean isPlayableInEvent(EEntity entity)
 	{
-		if (playable.isPlayer())
+		if (entity.isPlayer())
 		{
-			return _eventPlayers.containsKey(playable.getObjectId());
+			return _eventPlayers.containsKey(entity.getId());
 		}
 		
-		if (playable.isSummon())
+		if (entity.isSummon())
 		{
-			return _eventPlayers.containsKey(((L2Summon) playable).getOwner().getObjectId());
+			return _eventPlayers.containsKey(((ESummon) entity).getOwnerId());
 		}
 		return false;
 	}
 	
 	/**
 	 * Check if a player is participating in any event. In the case of dealing with a summon, verify the owner. For an event not participated returns <u>null.</u>
-	 * @param character
+	 * @param entity
 	 * @return PlayerHolder
 	 */
-	public PlayerHolder getEventPlayer(L2Character character)
+	public EPlayer getEventPlayer(EEntity entity)
 	{
-		if (character.isSummon())
+		if (entity.isSummon())
 		{
-			return _eventPlayers.get(((L2Summon) character).getOwner().getObjectId());
+			return _eventPlayers.get(((ESummon) entity).getOwnerId());
 		}
-		if (character.isPlayer())
+		if (entity.isPlayer())
 		{
-			return _eventPlayers.get(character.getObjectId());
+			return _eventPlayers.get(entity.getId());
 		}
 		return null;
 	}

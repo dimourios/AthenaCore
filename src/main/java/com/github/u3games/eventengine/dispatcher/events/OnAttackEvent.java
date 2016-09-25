@@ -1,24 +1,23 @@
 package com.github.u3games.eventengine.dispatcher.events;
 
+import com.github.u3games.eventengine.core.model.entity.EEntity;
 import com.github.u3games.eventengine.enums.ListenerType;
-import com.l2jserver.gameserver.model.actor.L2Character;
-import com.l2jserver.gameserver.model.actor.L2Playable;
 
 public class OnAttackEvent extends ListenerEvent {
 
-    private final L2Playable mAttacker;
-    private final L2Character mTarget;
+    private final EEntity mAttacker;
+    private final EEntity mTarget;
 
-    public OnAttackEvent(L2Playable attacker, L2Character target) {
+    public OnAttackEvent(EEntity attacker, EEntity target) {
         mAttacker = attacker;
         mTarget = target;
     }
 
-    public L2Playable getAttacker() {
+    public EEntity getAttacker() {
         return mAttacker;
     }
 
-    public L2Character getTarget() {
+    public EEntity getTarget() {
         return mTarget;
     }
 

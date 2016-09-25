@@ -46,7 +46,25 @@ public class APIPlayer {
         return getPlayer(ePlayer).isDead();
     }
 
+    public boolean isInOlympiadMode(EPlayer ePlayer) {
+        return getPlayer(ePlayer).isInOlympiadMode();
+    }
+
+    public boolean isInDuel(EPlayer ePlayer) {
+        return getPlayer(ePlayer).isInDuel();
+    }
+
+    public boolean isInObserverMode(EPlayer ePlayer) {
+        return getPlayer(ePlayer).inObserverMode();
+    }
+
     // ------------- ACTIONS -------------
+
+    public void addEventListener(EPlayer ePlayer) {
+        L2PcInstance player = getPlayer(ePlayer);
+
+        player.addEventListener(new EventEngineListener(player));
+    }
 
     public void sendPartyRoomCommander(EPlayer ePlayer, String message) {
         getPlayer(ePlayer).sendPacket(new CreatureSay(0, Say2.PARTYROOM_COMMANDER, "", message));

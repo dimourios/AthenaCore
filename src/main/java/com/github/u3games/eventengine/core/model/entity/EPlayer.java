@@ -236,11 +236,11 @@ public class EPlayer extends EEntity implements ParticipantHolder {
     }
 
     public void sendMessage(String key) {
-
+        APIPlayer.getInstance().sendMessage(this, MessageData.getInstance().getMsgByLang(this, key, false));
     }
 
     public void sendMessage(String key, boolean tag) {
-
+        APIPlayer.getInstance().sendMessage(this, MessageData.getInstance().getMsgByLang(this, key, tag));
     }
 
     public void removePlayerFromEvent()
@@ -248,5 +248,47 @@ public class EPlayer extends EEntity implements ParticipantHolder {
         recoverOriginalColorTitle();
         recoverOriginalTitle();
         APIPlayer.getInstance().removeFromEventInstance(this, getReturnLoc());
+    }
+
+    public boolean isInOlympiadMode()
+    {
+        return APIPlayer.getInstance().isInOlympiadMode(this);
+    }
+
+    public boolean isInDuel()
+    {
+        return APIPlayer.getInstance().isInDuel(this);
+    }
+
+    public boolean isInObserverMode()
+    {
+        return APIPlayer.getInstance().isInObserverMode(this);
+    }
+
+    public void addEventListener()
+    {
+
+    }
+
+    @Override
+    public boolean isPlayer()
+    {
+        return true;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if (this == o) return true;
+        if (o == null || !(o instanceof EPlayer)) return false;
+
+        EPlayer player = (EPlayer) o;
+
+        return getId() == player.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return getId();
     }
 }

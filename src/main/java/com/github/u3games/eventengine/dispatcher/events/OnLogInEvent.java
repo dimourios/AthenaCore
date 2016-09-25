@@ -1,18 +1,17 @@
 package com.github.u3games.eventengine.dispatcher.events;
 
-import com.github.u3games.eventengine.core.model.entity.EPlayer;
 import com.github.u3games.eventengine.enums.ListenerType;
 
 public class OnLogInEvent extends ListenerEvent {
 
-    private final EPlayer mPlayer;
+    private final int mPlayerId;
 
-    public OnLogInEvent(EPlayer player) {
-        mPlayer = player;
+    public OnLogInEvent(int playerId) {
+        mPlayerId = playerId;
     }
 
-    public EPlayer getPlayer() {
-        return mPlayer;
+    public int getPlayerId() {
+        return mPlayerId;
     }
 
     public ListenerType getType() {

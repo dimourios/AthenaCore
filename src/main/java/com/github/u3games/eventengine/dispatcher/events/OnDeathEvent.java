@@ -1,17 +1,17 @@
 package com.github.u3games.eventengine.dispatcher.events;
 
+import com.github.u3games.eventengine.core.model.entity.EPlayer;
 import com.github.u3games.eventengine.enums.ListenerType;
-import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
 
 public class OnDeathEvent extends ListenerEvent {
 
-    private final L2PcInstance mTarget;
+    private final EPlayer mTarget;
 
-    public OnDeathEvent(L2PcInstance target) {
+    public OnDeathEvent(EPlayer target) {
         mTarget = target;
     }
 
-    public L2PcInstance getTarget() {
+    public EPlayer getTarget() {
         return mTarget;
     }
 

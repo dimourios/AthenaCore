@@ -11,13 +11,13 @@ public class RegistrationManager {
     private static RegistrationManager sInstance;
 
     // List of players at the event
-    private final Set<EPlayer> mEventRegisterdPlayers = ConcurrentHashMap.newKeySet();
+    private final Set<Integer> mEventRegisterdPlayers = ConcurrentHashMap.newKeySet();
 
     /**
      * Get the collection of registered players.
      * @return Collection<L2PcInstance>
      */
-    public Collection<EPlayer> getAllRegisteredPlayers() {
+    public Collection<Integer> getAllRegisteredPlayers() {
         return mEventRegisterdPlayers;
     }
 
@@ -46,7 +46,7 @@ public class RegistrationManager {
      *         <li>False It's not registered.</li>
      */
     public boolean isRegistered(EPlayer player) {
-        return mEventRegisterdPlayers.contains(player);
+        return mEventRegisterdPlayers.contains(player.getId());
     }
 
     /**
@@ -57,7 +57,7 @@ public class RegistrationManager {
      *         <li>False If the player already registered.</li>
      */
     public boolean registerPlayer(EPlayer player) {
-        return mEventRegisterdPlayers.add(player);
+        return mEventRegisterdPlayers.add(player.getId());
     }
 
     /**
@@ -68,7 +68,7 @@ public class RegistrationManager {
      *         <li>False If the player was not registered.</li>
      */
     public boolean unRegisterPlayer(EPlayer player) {
-        return mEventRegisterdPlayers.remove(player);
+        return mEventRegisterdPlayers.remove(player.getId());
     }
 
     public static RegistrationManager getInstance() {

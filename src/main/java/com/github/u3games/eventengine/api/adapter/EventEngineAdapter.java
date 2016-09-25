@@ -20,8 +20,10 @@
 package com.github.u3games.eventengine.api.adapter;
 
 import com.github.u3games.eventengine.ai.NpcManager;
+import com.github.u3games.eventengine.core.model.entity.EPlayer;
 import com.github.u3games.eventengine.dispatcher.ListenerDispatcher;
 import com.github.u3games.eventengine.dispatcher.events.*;
+import com.github.u3games.eventengine.repository.PlayerRepository;
 import com.l2jserver.gameserver.model.L2Object;
 import com.l2jserver.gameserver.model.actor.L2Character;
 import com.l2jserver.gameserver.model.actor.L2Playable;
@@ -59,7 +61,7 @@ public class EventEngineAdapter extends Quest
 	@Priority(Integer.MAX_VALUE)
 	public void onPlayerLogin(OnPlayerLogin event)
 	{
-		ListenerDispatcher.getInstance().notifyEvent(new OnLogInEvent(event.getActiveChar()));
+		ListenerDispatcher.getInstance().notifyEvent(new OnLogInEvent(event.getActiveChar().getId()));
 	}
 	
 	// When the player exits
@@ -68,7 +70,8 @@ public class EventEngineAdapter extends Quest
 	@Priority(Integer.MAX_VALUE)
 	public void onPlayerLogout(OnPlayerLogout event)
 	{
-		ListenerDispatcher.getInstance().notifyEvent(new OnLogOutEvent(event.getActiveChar()));
+		EPlayer ePlayer = PlayerRepository.getInstance().getPlayer(event.getActiveChar().getId());
+		ListenerDispatcher.getInstance().notifyEvent(new OnLogOutEvent(ePlayer));
 	}
 	
 	// When a playable uses a skill

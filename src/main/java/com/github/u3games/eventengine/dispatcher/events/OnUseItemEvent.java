@@ -1,24 +1,24 @@
 package com.github.u3games.eventengine.dispatcher.events;
 
+import com.github.u3games.eventengine.core.model.EItem;
+import com.github.u3games.eventengine.core.model.entity.EPlayer;
 import com.github.u3games.eventengine.enums.ListenerType;
-import com.l2jserver.gameserver.model.actor.instance.L2PcInstance;
-import com.l2jserver.gameserver.model.items.L2Item;
 
 public class OnUseItemEvent extends ListenerEvent {
 
-    private final L2PcInstance mPlayer;
-    private final L2Item mItem;
+    private final EPlayer mPlayer;
+    private final EItem mItem;
 
-    public OnUseItemEvent(L2PcInstance player, L2Item item) {
+    public OnUseItemEvent(EPlayer player, EItem item) {
         mPlayer = player;
         mItem = item;
     }
 
-    public L2PcInstance getPlayer() {
+    public EPlayer getPlayer() {
         return mPlayer;
     }
 
-    public L2Item getItem() {
+    public EItem getItem() {
         return mItem;
     }
 
